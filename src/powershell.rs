@@ -1,5 +1,5 @@
+use std::env;
 use std::fs;
-use std::path;
 use zed_extension_api::{self as zed, Result};
 
 struct PowerShellExtension {
@@ -123,8 +123,9 @@ impl PowerShellExtension {
             }
         }
 
-        let abs_path =
-            path::absolute(&version_dir).map_err(|e| format!("failed to get absolute path {e}"))?;
+        let abs_path = env::current_dir()
+            .map_err(|_| "Failed to get current path".to_string())?
+            .join(version_dir);
         Ok(abs_path.display().to_string())
     }
 }
