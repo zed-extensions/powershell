@@ -15,3 +15,28 @@ to set the bundle path through `lsp` configuration:
     }
   }
 }
+```
+
+Configure PowerShellEditorServices settings like this:
+
+```json
+"languages": {
+    "PowerShell": {
+      "formatter": "language_server",
+    },
+  },
+"lsp": {
+    "powershell-es": {
+      "settings": {
+        "powershell": {
+          "codeFormatting": {
+            "openBraceOnSameLine": true,
+            "addWhitespaceAroundPipe": true,
+            "trimWhitespaceAroundPipe": true,
+            "ignoreOneLineBlock": true,
+          },
+        },
+      },
+    },
+  },
+```
