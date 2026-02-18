@@ -1,17 +1,43 @@
-# PowerShell extension for Zed editor
+# PowerShell support for Zed
 
-## Setting up language server
+This extension provides syntax highlighting as well as language server support for PowerShell files
 
-Currently, the extension didn't support automatic installation (it'll soon land). You need
-to set the bundle path through `lsp` configuration:
+## Configuring your language server
+
+The extension requires PowerShell to be available in your environment. If that is the case,
+the extension will auto-download the language server and start it.
+
+If you wish to specify a custom path to your language server, you can do so via your settings:
 
 ```json
 {
-  "lsp": {
-    "powershell-es": {
-      "binary": {
-        "path": "<path to PowerShellEditorServices>"
-      }
+    "lsp": {
+        "powershell-es": {
+            "binary": {
+                "path": "<path to PowerShellEditorServices>"
+            }
+        }
     }
-  }
 }
+```
+
+Additionally, you can configure settings for your language server as well as initialization options
+to pass to the language server on start.
+
+An example for this:
+
+```json
+"lsp":{
+   "powershell-es":{
+      "settings":{
+         "powershell":{
+            "codeFormatting":{
+               "openBraceOnSameLine":true,
+               "addWhitespaceAroundPipe":true,
+               "trimWhitespaceAroundPipe":true,
+               "ignoreOneLineBlock":true
+            }
+         }
+      }
+   }
+```
