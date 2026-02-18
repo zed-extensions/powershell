@@ -393,13 +393,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "powershell"
-version = "0.5.0"
-dependencies = [
- "zed_extension_api",
-]
-
-[[package]]
 name = "prettyplease"
 version = "0.2.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -763,6 +756,13 @@ dependencies = [
  "serde",
  "serde_json",
  "wit-bindgen",
+]
+
+[[package]]
+name = "zed_powershell"
+version = "0.4.0"
+dependencies = [
+ "zed_extension_api",
 ]
 
 [[package]]
