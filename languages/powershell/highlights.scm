@@ -46,7 +46,6 @@
   "workflow"
 ] @keyword
 
-
 [
   "-as"
   "-ccontains"
@@ -119,10 +118,10 @@
   ";"
 ] @punctuation.delimiter
 
-
 (string_literal) @string
 
 (integer_literal) @number
+
 (real_literal) @number
 
 (command
