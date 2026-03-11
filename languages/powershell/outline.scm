@@ -1,6 +1,10 @@
 ; Functions (including filter and workflow keywords)
 (function_statement
-  ["function" "filter" "workflow"] @context
+  [
+    "function"
+    "filter"
+    "workflow"
+  ] @context
   (function_name) @name) @item
 
 ; Classes
