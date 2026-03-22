@@ -12,11 +12,20 @@ If you wish to specify a custom path to your language server, you can do so via 
 ```json
 {
     "lsp": {
-        "powershell-es": {
-            "binary": {
-                "path": "<path to PowerShellEditorServices>"
-            }
-        }
+		"powershell-es": {
+			"binary": {
+				"path": "pwsh.exe",
+				"arguments": [
+					"-NoLogo",
+					"-NoProfile",
+					"-Command",
+					"path\\to\\Start-EditorServices.ps1",
+					"-Stdio",
+					"-SessionDetailsPath",
+					"path\\to\\powershell-es.session.json",
+				],
+			},
+		},
     }
 }
 ```
