@@ -1,0 +1,12 @@
+[
+  {
+    "label": "PowerShell: Run Selection",
+    "command": "pwsh",
+    "args": ["-NoLogo", "-NoProfile", "-Command", "$ZED_SELECTED_TEXT"]
+  },
+  {
+    "label": "PowerShell: Run File",
+    "command": "pwsh",
+    "args": ["-NoLogo", "-NoProfile", "-File", "$ZED_FILE"]
+  }
+]
