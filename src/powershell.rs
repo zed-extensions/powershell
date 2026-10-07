@@ -4,8 +4,8 @@ use zed_extension_api::settings::LspSettings;
 use zed_extension_api::{self as zed, Result};
 
 struct PowerShellExtension {
-    /// The PowerShell binary, default to `pwsh`.
-    // TODO: allow to configure via Zed settings.
+    /// The resolved PowerShell binary path, cached after the first lookup.
+    /// Falls back from `pwsh` (PowerShell Core) to `powershell` (Windows PowerShell).
     powershell_bin: Option<String>,
 }
 
@@ -24,7 +24,8 @@ impl zed::Extension for PowerShellExtension {
         language_server_id: &zed_extension_api::LanguageServerId,
         worktree: &zed_extension_api::Worktree,
     ) -> zed_extension_api::Result<zed_extension_api::Command> {
-        let pwsh_bin = PowerShellExtension::powershell_binary_path(self, worktree)?;
+        let pwsh_bin =
+            PowerShellExtension::powershell_binary_path(self, language_server_id, worktree)?;
 
         let bundle_path = self
             .language_server_path(language_server_id)
@@ -78,15 +79,38 @@ impl zed::Extension for PowerShellExtension {
 }
 
 impl PowerShellExtension {
-    fn powershell_binary_path(&mut self, worktree: &zed::Worktree) -> Result<String> {
+    fn powershell_binary_path(
+        &mut self,
+        language_server_id: &zed_extension_api::LanguageServerId,
+        worktree: &zed::Worktree,
+    ) -> Result<String> {
+        // Honour a user-configured binary path from LSP settings first.
+        if let Ok(settings) =
+            LspSettings::for_worktree(language_server_id.as_ref(), worktree)
+        {
+            if let Some(binary) = settings.binary {
+                if let Some(path) = &binary.path {
+                    if fs::metadata(path).is_ok_and(|stat| stat.is_file()) {
+                        self.powershell_bin = Some(path.clone());
+                        return Ok(path.clone());
+                    }
+                }
+            }
+        }
+
         let pwsh_path = match &self.powershell_bin {
             Some(path) if fs::metadata(path).is_ok_and(|stat| stat.is_file()) => path.clone(),
             Some(path) => worktree
                 .which(path.clone().as_str())
                 .ok_or("PowerShell must be installed for PowerShell Extension")?,
-            None => worktree
-                .which("pwsh")
-                .ok_or("PowerShell must be installed for PowerShell Extension")?,
+            None => {
+                // Try `pwsh` (PowerShell Core) first, then fall back to
+                // `powershell` (Windows PowerShell) which ships with Windows.
+                worktree
+                    .which("pwsh")
+                    .or_else(|| worktree.which("powershell"))
+                    .ok_or("PowerShell must be installed for PowerShell Extension")?
+            }
         };
         self.powershell_bin = Some(pwsh_path.clone());
         Ok(pwsh_path)
